@@ -1,0 +1,15 @@
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<script type="text/javascript" src="lastfm.api.md5.js"></script>
+<script type="text/javascript" src="lastfm.api.js"></script>
+<script type="text/javascript" src="lastfm.api.cache.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    var socket=io()
+    var roomID = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
+    if(roomID) {
+        socket.emit('join', roomID);
+    }
+    socket.on('update', song => {
+        console.log(song)
+    })
+</script>
