@@ -225,7 +225,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/room/:id', (req, res) => {
-    res.sendFile('public/index.html')
+    res.sendFile(process.cwd() + '/assets/index.html')
 })
 
 app.get('/room/:id/song/:songid', function (req, res) {
@@ -234,4 +234,4 @@ app.get('/room/:id/song/:songid', function (req, res) {
     }
 })
 
-app.use(express.static('public'))
+app.use(express.static('assets/public'))
