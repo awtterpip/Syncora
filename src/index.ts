@@ -1,19 +1,11 @@
 import express from "express";
 import { createServer } from "https"
 import { Server } from 'socket.io'
-import got from 'got-cjs'
-import { JSDOM } from 'jsdom'
-import fetch from "node-fetch"
 import ytdl from 'ytdl-core'
 import LastFM = require('last-fm')
 import util = require('util')
-import formurlencoded from 'form-urlencoded';
-import url = require('url')
 import * as fs from 'fs'
-import streamToBlob = require('stream-to-blob')
-import { Blob } from "buffer";
 import { apiKeys, getSongFromLink, generateID, stream2buffer } from './utils'
-import concat = require('concat-stream')
 
 const options = {
     key: fs.readFileSync('/home/zach/localhost-key.pem'),

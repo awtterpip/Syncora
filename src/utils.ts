@@ -1,4 +1,3 @@
-import { InternalsType } from 'got-cjs';
 import fetch from 'node-fetch'
 import { parse } from 'node-html-parser'
 import ytdl from 'ytdl-core'
