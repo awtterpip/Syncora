@@ -225,14 +225,13 @@ app.get('/', (req, res) => {
 })
 
 app.get('/room/:id', (req, res) => {
-    res.sendFile(__dirname + '/index.html')
+    res.sendFile('public/index.html')
 })
 
 app.get('/room/:id/song/:songid', function (req, res) {
-
     if (cache[req.params.id]) {
         res.send(cache[req.params.id][req.params.songid])
     }
 })
 
-app.use(express.static('dist/public'))
+app.use(express.static('public'))
