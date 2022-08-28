@@ -62,7 +62,7 @@ io.on('connection', async (socket) => {
                     io.to(roomID).emit('song', session.currentlyPlaying.id, {buffer: vid, mime: format.mimeType})
                 }
             }
-            if(session?.queue[0]) {
+            if(session?.queue[0]?.id) {
                 if (!cache[roomID][session?.queue[0]?.id]) {
                     let info = await ytdl.getInfo(session.queue[0].url);
                     let format = ytdl.chooseFormat(info.formats, { quality: "highestaudio", filter: "audioonly" })
@@ -143,7 +143,7 @@ io.on('connection', async (socket) => {
         if ((!sessions[roomID]?.state?.paused) && roomID) {
             if (sessions[roomID].currentlyPlaying) {
                 clearTimeout(sessions[roomID].state.timer);
-                sessions[roomID].state.remainingTime = (new Date()).getTime() - sessions[roomID].state.startTime
+                sessions[roomID].state.remainingTime -= (new Date()).getTime() - sessions[roomID].state.startTime 
                 sessions[roomID].state.timer = undefined;
                 sessions[roomID].state.paused = true;
                 io.to(roomID).emit('update', JSON.stringify(sessions[roomID]))
