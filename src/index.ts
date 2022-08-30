@@ -65,27 +65,27 @@ io.on('connection', async (socket) => {
                     let info = await ytdl.getInfo(session.currentlyPlaying.url);
                     let format = ytdl.chooseFormat(info.formats, { quality: "highestaudio", filter: "audioonly" })
                     let vid = await stream2buffer(ytdl(session.currentlyPlaying.url, { format: format }))
-                    cache[roomID][session.currentlyPlaying.id] = {buffer: vid, mime: format.mimeType}
-                    io.to(roomID).emit('song', session.currentlyPlaying.id, {buffer: vid, mime: format.mimeType})
+                    cache[roomID][session.currentlyPlaying.id] = { buffer: vid, mime: format.mimeType }
+                    io.to(roomID).emit('song', session.currentlyPlaying.id, { buffer: vid, mime: format.mimeType })
                 }
             }
-            if(session?.queue[0]?.id) {
+            if (session?.queue[0]?.id) {
                 if (!cache[roomID][session?.queue[0]?.id]) {
                     let info = await ytdl.getInfo(session.queue[0].url);
                     let format = ytdl.chooseFormat(info.formats, { quality: "highestaudio", filter: "audioonly" })
                     let vid = await stream2buffer(ytdl(session.queue[0].url, { format: format }))
-                    cache[roomID][session.queue[0].id] = {buffer: vid, mime: format.mimeType}
-                    io.to(roomID).emit('song', session.queue[0].id, {buffer: vid, mime: format.mimeType})
+                    cache[roomID][session.queue[0].id] = { buffer: vid, mime: format.mimeType }
+                    io.to(roomID).emit('song', session.queue[0].id, { buffer: vid, mime: format.mimeType })
                 }
             }
-            for(let i = 0; i > 2; i++) {
-                if(session?.songHistory[i]) {
+            for (let i = 0; i > 2; i++) {
+                if (session?.songHistory[i]) {
                     if (!cache[roomID][session?.songHistory[i]?.id]) {
                         let info = await ytdl.getInfo(session.songHistory[i].url);
                         let format = ytdl.chooseFormat(info.formats, { quality: "highestaudio", filter: "audioonly" })
                         let vid = await stream2buffer(ytdl(session.songHistory[i].url, { format: format }))
-                        cache[roomID][session.songHistory[i].id] = {buffer: vid, mime: format.mimeType}
-                        io.to(roomID).emit('song', session.songHistory[i].id, {buffer: vid, mime: format.mimeType})
+                        cache[roomID][session.songHistory[i].id] = { buffer: vid, mime: format.mimeType }
+                        io.to(roomID).emit('song', session.songHistory[i].id, { buffer: vid, mime: format.mimeType })
                     }
                 }
             }
@@ -100,18 +100,22 @@ io.on('connection', async (socket) => {
             }
             roomID = id;
             socket.join(id);
-            sessions[roomID] = {
-                queue: [],
-                currentlyPlaying: null,
-                songHistory: [],
-                state: {
-                    paused: true,
-                    timer: undefined,
-                    remainingTime: undefined,
-                    startTime: undefined,
+            if (!sessions[roomID]) {
+                sessions[roomID] = {
+                    queue: [],
+                    currentlyPlaying: null,
+                    songHistory: [],
+                    state: {
+                        paused: true,
+                        timer: undefined,
+                        remainingTime: undefined,
+                        startTime: undefined,
+                    }
                 }
             }
-            cache[roomID] = {}
+            if (!cache[roomID]) {
+                cache[roomID] = {}
+            }
             io.to(id).emit('join', socket.id);
             io.to(socket.id).emit('update', JSON.stringify(sessions[id]));
         } else {
@@ -150,7 +154,7 @@ io.on('connection', async (socket) => {
         if ((!sessions[roomID]?.state?.paused) && roomID) {
             if (sessions[roomID].currentlyPlaying) {
                 clearTimeout(sessions[roomID].state.timer);
-                sessions[roomID].state.remainingTime -= (new Date()).getTime() - sessions[roomID].state.startTime 
+                sessions[roomID].state.remainingTime -= (new Date()).getTime() - sessions[roomID].state.startTime
                 sessions[roomID].state.timer = undefined;
                 sessions[roomID].state.paused = true;
                 io.to(roomID).emit('update', JSON.stringify(sessions[roomID]))
