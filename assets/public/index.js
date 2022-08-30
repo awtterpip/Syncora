@@ -18,7 +18,7 @@ socket.on('update', async function (_session) {
     console.log(JSON.parse(_session))
     
     session = JSON.parse(_session)
-    document.getElementById('queue').innerHTML = session.queue.map(val => val.artist + " - " + val.name)
+    document.getElementById('queue').innerHTML = session.queue.map(val => val.name)
     if (session.currentlyPlaying && (!session.state.paused)) {
         var today = new Date()
         console.log(today.getTime(), session.state.startTime * -1, session.currentlyPlaying.time * 1000, session.state.remainingTime * -1)
