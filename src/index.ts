@@ -47,12 +47,13 @@ io.on('connection', async (socket) => {
     }
 
     async function searchSong(search) {
-        let response = await fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=1&q=${encodeURIComponent(search)}&key=${apiKeys.YouTube}`).then(res => res.json()).then(res => res?.items[0]?.id.videoId)
-        console.log(response)
-        io.to(socket.id).emit('search', 'https://www.youtube.com/watch?v=' + response)
+        fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=1&q=${encodeURIComponent(search)}&key=${apiKeys.YouTube}`).then(res => res.json()).then(res => res?.items[0]?.id.videoId)
+        .then(res => io.to(socket.id).emit('search', 'https://www.youtube.com/watch?v=' + res))
+        
     }
 
     async function cacheSongs() {
+        console.log('ye')
         if (cache[roomID]) {
             const session = sessions[roomID]
             for (const song in cache[roomID]) {
@@ -66,8 +67,8 @@ io.on('connection', async (socket) => {
                     let format = ytdl.chooseFormat(info.formats, { quality: "highestaudio", filter: "audioonly" })
                     let vid = await stream2buffer(ytdl(session.currentlyPlaying.url, { format: format }))
                     cache[roomID][session.currentlyPlaying.id] = { buffer: vid, mime: format.mimeType }
-                    io.to(roomID).emit('song', session.currentlyPlaying.id, { buffer: vid, mime: format.mimeType })
                 }
+                io.to(roomID).emit('song', session.currentlyPlaying.id, cache[roomID][session.currentlyPlaying.id]) 
             }
             if (session?.queue[0]?.id) {
                 if (!cache[roomID][session?.queue[0]?.id]) {
@@ -75,8 +76,9 @@ io.on('connection', async (socket) => {
                     let format = ytdl.chooseFormat(info.formats, { quality: "highestaudio", filter: "audioonly" })
                     let vid = await stream2buffer(ytdl(session.queue[0].url, { format: format }))
                     cache[roomID][session.queue[0].id] = { buffer: vid, mime: format.mimeType }
-                    io.to(roomID).emit('song', session.queue[0].id, { buffer: vid, mime: format.mimeType })
                 }
+                    io.to(roomID).emit('song', session.queue[0].id, cache[roomID][session.queue[0].id])
+                
             }
             for (let i = 0; i > 2; i++) {
                 if (session?.songHistory[i]) {
@@ -85,8 +87,8 @@ io.on('connection', async (socket) => {
                         let format = ytdl.chooseFormat(info.formats, { quality: "highestaudio", filter: "audioonly" })
                         let vid = await stream2buffer(ytdl(session.songHistory[i].url, { format: format }))
                         cache[roomID][session.songHistory[i].id] = { buffer: vid, mime: format.mimeType }
-                        io.to(roomID).emit('song', session.songHistory[i].id, { buffer: vid, mime: format.mimeType })
                     }
+                    io.to(roomID).emit('song', session.songHistory[i].id, cache[roomID][session.songHistory[i].id])
                 }
             }
         }
@@ -117,6 +119,7 @@ io.on('connection', async (socket) => {
                 cache[roomID] = {}
             }
             io.to(id).emit('join', socket.id);
+            cacheSongs()
             io.to(socket.id).emit('update', JSON.stringify(sessions[id]));
         } else {
             io.to(socket.id).emit('error', "roomID can only contain alphanumeric characters");
@@ -163,7 +166,7 @@ io.on('connection', async (socket) => {
     }
     async function nextSong() {
         console.log(roomID)
-        if (roomID) {
+        if(sessions[roomID]) {
             pause()
             if (sessions[roomID].currentlyPlaying) {
                 sessions[roomID].songHistory.unshift(sessions[roomID].currentlyPlaying)
@@ -188,7 +191,7 @@ io.on('connection', async (socket) => {
     }
 
     function prevSong() {
-        if (roomID) {
+        if(sessions[roomID]) {
             if (sessions[roomID].currentlyPlaying) {
                 sessions[roomID].queue.unshift(sessions[roomID].currentlyPlaying)
             }
@@ -221,6 +224,7 @@ io.on('connection', async (socket) => {
         }
     }
 
+    socket.on('getUpdate', () => io.to(socket.id).emit('update', JSON.stringify(sessions[roomID])))
     socket.on('searchSong', searchSong)
     socket.on('ready', () => console.log('ready'))
     socket.on('pause', pause)
