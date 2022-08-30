@@ -5,6 +5,7 @@ import ytdl from 'ytdl-core'
 import LastFM = require('last-fm')
 import util = require('util')
 import * as fs from 'fs'
+import fetch from "node-fetch";
 import { apiKeys, getSongFromLink, generateID, stream2buffer } from './utils'
 
 const options = {
@@ -45,11 +46,17 @@ io.on('connection', async (socket) => {
         io.to(roomID).emit('update', JSON.stringify(info))
     }
 
+    async function searchSong(search) {
+        let response = await fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=1&q=${encodeURIComponent(search)}&key=${apiKeys.YouTube}`).then(res => res.json()).then(res => res?.items[0]?.id.videoId)
+        console.log(response)
+        io.to(socket.id).emit('search', 'https://www.youtube.com/watch?v=' + response)
+    }
+
     async function cacheSongs() {
         if (cache[roomID]) {
             const session = sessions[roomID]
             for (const song in cache[roomID]) {
-                if (!(session.queue[0]?.id == song || session.currentlyPlaying?.id == song || session.songHistory[0]?.id == song || session.songHistory[1].id == song)) {
+                if (!(session.queue[0]?.id == song || session.currentlyPlaying?.id == song || session.songHistory[0]?.id == song || session.songHistory[1]?.id == song)) {
                     cache[roomID][song] = undefined
                 }
             }
@@ -127,7 +134,7 @@ io.on('connection', async (socket) => {
             for (let i = 0; i < links.length; i++) {
                 songs[i] = await getSongFromLink(links[i])
             }
-            io.to(roomID).emit('songResults', JSON.stringify(songs))
+            io.to(socket.id).emit('songResults', JSON.stringify(songs))
         }
     }
 
@@ -151,7 +158,9 @@ io.on('connection', async (socket) => {
         }
     }
     async function nextSong() {
+        console.log(roomID)
         if (roomID) {
+            pause()
             if (sessions[roomID].currentlyPlaying) {
                 sessions[roomID].songHistory.unshift(sessions[roomID].currentlyPlaying)
             }
@@ -166,6 +175,8 @@ io.on('connection', async (socket) => {
                     startTime: undefined,
                     remainingTime: sessions[roomID].currentlyPlaying.time * 1000
                 }
+            } else {
+                sessions[roomID].currentlyPlaying = undefined
             }
             cacheSongs()
             play()
@@ -206,6 +217,8 @@ io.on('connection', async (socket) => {
         }
     }
 
+    socket.on('searchSong', searchSong)
+    socket.on('ready', () => console.log('ready'))
     socket.on('pause', pause)
     socket.on('play', play)
     socket.on('updateQueue', updateQueue)
