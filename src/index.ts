@@ -9,8 +9,8 @@ import fetch from "node-fetch";
 import { apiKeys, getSongFromLink, generateID, stream2buffer } from './utils'
 
 const options = {
-    key: fs.readFileSync('/home/zach/localhost-key.pem'),
-    cert: fs.readFileSync('/home/zach/localhost.pem')
+    key: fs.readFileSync('./localhost-key.pem'),
+    cert: fs.readFileSync('./localhost.pem')
 };
 const app = express();
 const server = createServer(options, app);

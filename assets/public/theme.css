@@ -1,0 +1,148 @@
+@import "animations.css";
+@import "colors.css";
+
+.upper-section {
+    padding: 0;
+    margin: 0;
+    width: 100%;
+}
+
+.panel {
+    box-sizing: border-box;
+    margin: 8px;
+    padding: 0px;
+    border-radius: 8px;
+}
+
+div {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.searchbar {
+    user-select: none;
+
+    color: var(--section-bg);
+    background-color: var(--section-bg);
+
+    height: auto;
+    display: inline-block;
+}
+
+.searchbar input {
+    outline: none;
+    border-style: hidden;
+    font-family: 'Ubuntu';
+    font-size: 16px;
+    font-weight: 350;
+    margin: 8px;
+    border-radius: 4px;
+    color: var(--section-button-fg);
+    background-color: var(--section-button-bg);
+    background-image: linear-gradient(30deg, var(--gradient-middle), var(--gradient-end));
+
+    /*first number is top and bottom second is left and right */
+    padding: 4px 8px;
+    transition: 0.1s ease-in-out;
+}
+
+.searchbar input:focus-visible,
+.searchbar input:hover {
+    color: var(--section-button-fg-hover);
+    background-image: linear-gradient(30deg, var(--gradient-start), var(--gradient-middle));
+
+    cursor: pointer;
+}
+
+.searchbar input:active {
+    color: var(--section-button-fg-hover);
+    opacity: 50%;
+
+
+}
+
+.playback-controls {
+    position: fixed;
+    user-select: none;
+    color: var(--section-bg);
+    background-color: var(--section-bg);
+    bottom:0;
+    border-radius: 7px;
+    width: calc(100% - 16px);
+
+}
+
+.playback-buttons {
+    align-content: center;
+    justify-content: center;
+    display: flex;
+}
+
+.playback-controls button {
+    outline: none;
+
+    font-family: 'Ubuntu';
+    font-size: 24px;
+
+    color: var(--section-button-fg);
+    background-color: var(--section-button-bg);
+    background-image: linear-gradient(30deg, var(--gradient-middle), var(--gradient-end));
+
+    border-radius: 7px;
+    border-width: 0px;
+
+    position: relative;
+
+    padding: 4px;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin: 4px;
+
+    transition: 0.1s ease-in-out;
+}
+
+.playback-controls button:focus-visible,
+.playback-controls button:hover {
+    color: var(--section-button-fg-hover);
+    background-image: linear-gradient(30deg, var(--gradient-start), var(--gradient-middle));
+
+    cursor: pointer;
+}
+
+.playback-controls button:active {
+    color: var(--section-button-fg-hover);
+    opacity: 50%;
+
+    top: 0.075em;
+}
+
+.time-slider-container {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.time-slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 10px;
+    transition: 0.1s ease-in-out;
+    background: var(--page-bg);
+}
+
+.time-slider:hover {
+    height: 20px
+}
+
+
+
+.time-slider::-moz-range-thumb {
+    width: 5px;
+    height: 100%;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+.time-slider::-moz-range-progress {
+    height: 100%;
+    background-image: linear-gradient(30deg, var(--gradient-middle), var(--gradient-end));
+}

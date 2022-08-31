@@ -1,0 +1,55 @@
+@import "animations.css";
+@import "theme.css";
+
+.playback-controls {
+  user-select: none;
+  
+  color:            var(--section-bg);
+  background-color: var(--section-bg);
+  
+  border-radius: 7px;
+  
+  padding:  8px;
+  
+  margin: 8px;
+  
+  display:        inline-block;
+}
+
+.playback-controls button {
+  outline: none;
+  
+  font-family: 'Ubuntu';
+  font-size:   24px;
+
+  color:            var(--section-button-fg);
+  background-color: var(--section-button-bg);
+  background-image: linear-gradient(30deg, var(--gradient-middle), var(--gradient-end));
+  
+  border-radius: 7px;
+  border-width:  0px;
+  
+  position: relative;
+  
+  padding:       4px;
+  padding-left:  8px;
+  padding-right: 8px;
+  margin:        4px;
+
+  transition: 0.1s ease-in-out;
+}
+
+.playback-controls button:focus-visible,
+.playback-controls button:hover {
+  color:            var(--section-button-fg-hover);
+  background-image: linear-gradient(30deg, var(--gradient-start), var(--gradient-middle));
+
+  cursor: pointer;
+}
+
+.playback-controls button:active {
+  color:   var(--section-button-fg-hover);
+  opacity: 50%;
+  
+  top: 0.075em;
+}

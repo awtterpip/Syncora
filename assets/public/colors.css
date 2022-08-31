@@ -1,0 +1,17 @@
+:root {
+  --gradient-start:  #F9728A;
+  --gradient-middle: #D879B4;
+  --gradient-end:    #7F8CB8;
+
+  --page-bg: #161923;
+  --page-fg: #B7BCD4;
+  
+  --section-bg:               #1F2437;
+  --section-fg:               #B7BCD4;
+  --section-button-bg:        #2C334D;
+  --section-button-fg:        #D7D9E6;
+  --section-button-bg-hover:  #1F2437;
+  --section-button-fg-hover:  #1F2437;
+  --section-button-bg-active: #2C334D;
+  --section-button-fg-active: #7F8CB8;
+}
