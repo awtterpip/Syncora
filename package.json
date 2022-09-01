@@ -28,6 +28,6 @@
     "node-fetch": "^2.6.7",
     "node-html-parser": "^5.4.2-0",
     "socket.io": "^4.5.1",
-    "ytdl-core": "^4.11.1"
+    "ytdl-core": "github:GreepTheSheep/node-ytdl-core"
   }
 }
