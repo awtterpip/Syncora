@@ -3,6 +3,7 @@ interface Session {
     currentlyPlaying?: Song;
     songHistory?: Song[];
     state?: State;
+    stream?: Internal.Readable;
 }
 interface Sessions {[key:string]: Session | undefined}
 interface Song {

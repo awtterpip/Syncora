@@ -17,7 +17,7 @@ export async function getSongFromLink(link: string): Promise<Song | null> {
     try {
         if (typeof link == 'string') {
             if (link.startsWith('yt:')) {
-                const info = await ytdl.getInfo(link.replace("yt:", ""));
+                const info = await ytdl.getInfo(link.replaceAll("yt:", ""));
                 return {
                     name: info.videoDetails.title,
                     artist: info.videoDetails.author.name,
@@ -44,7 +44,7 @@ export async function getSongFromLink(link: string): Promise<Song | null> {
             return null;
         }
     } catch (error) {
-        return null;
+        return error.message;
     }
 }
 /**

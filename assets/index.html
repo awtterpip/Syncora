@@ -1,22 +1,26 @@
-<html><head>
+<html>
+  <head>
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
     <link rel="stylesheet" href="/base.css">
+    <script src="/socket.io/socket.io.js"></script>
     
   </head>
   
   <body>
     <div class="upper-section">
-      <div class="searchbar panel">
-        <input id="search" class="searchbar-item"><button onclick="addSong()" class="searchbar-item">
-          <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24px" height="24px">
-            <title>
-              Add a track to the queue
-            </title>
-            <path d="M232 280L64 280 64 232 232 232 232 64 280 64 280 232 448 232 448 280 280 280 280 448 232 448 232 280Z"></path>
-          </svg>
-        </button>
+      <div class="search-container">
+        <div class="searchbar panel">
+          <input id="search" class="searchbar-item">
+          <button onclick="addSong()" class="searchbar-item">
+            <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24px" height="24px">
+              <title>
+                Add a track to the queue
+              </title>
+              <path d="M232 280L64 280 64 232 232 232 232 64 280 64 280 232 448 232 448 280 280 280 280 448 232 448 232 280Z"></path>
+            </svg>
+          </button>
+        </div>
       </div>
-
       <div id="queue"></div>
     </div>
 
@@ -53,7 +57,8 @@
         <input type="range" min="1" max="1000" value="50" class="time-slider" id="time-slider">
       </div>
     </div>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/index.js"></script>
+    <script src="/index.js"></script>
+  </body>
+
   <style type="text/css"></style>
-</body></html>
+</html>

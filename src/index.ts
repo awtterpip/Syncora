@@ -1,11 +1,13 @@
 import express from "express";
 import { createServer } from "http"
+import { parse } from 'node-html-parser'
 import { Server } from 'socket.io'
 import ytdl from 'ytdl-core'
 import LastFM = require('last-fm')
 import util = require('util')
 import * as fs from 'fs'
 import fetch from "node-fetch";
+import { youtube } from 'scrape-youtube';
 import { apiKeys, getSongFromLink, generateID, stream2buffer } from './utils'
 
 const app = express();
@@ -43,13 +45,12 @@ io.on('connection', async (socket) => {
     }
 
     async function searchSong(search) {
-        fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=1&q=${encodeURIComponent(search)}&key=${apiKeys.YouTube}`).then(res => res.json()).then(res => res?.items[0]?.id.videoId)
-        .then(res => io.to(socket.id).emit('search', 'https://www.youtube.com/watch?v=' + res))
-        
+        let results = await youtube.search(search, {type: 'video'});
+        console.log(results)
+        io.to(socket.id).emit('searchResults', results.videos)
     }
 
     async function cacheSongs() {
-        console.log('ye')
         if (cache[roomID]) {
             const session = sessions[roomID]
             for (const song in cache[roomID]) {
@@ -61,19 +62,22 @@ io.on('connection', async (socket) => {
                 if (!cache[roomID][session?.currentlyPlaying?.id]) {
                     let info = await ytdl.getInfo(session.currentlyPlaying.url);
                     let format = ytdl.chooseFormat(info.formats, { quality: "highestaudio", filter: "audioonly" })
-                    let vid = await stream2buffer(ytdl(session.currentlyPlaying.url, { format: format }))
-                    cache[roomID][session.currentlyPlaying.id] = { buffer: vid, mime: format.mimeType }
+                    let vid = ytdl(session.currentlyPlaying.url, { format: format })
+                    let curid = session.currentlyPlaying.id
+                    cache[roomID][curid] = { buffer: Buffer, mime: format.mimeType }
+                    vid.on("data", chunk => cache[roomID][session.currentlyPlaying].buffer = cache[roomID][session.currentlyPlaying].buffer.concat(chunk));
+                    vid.on('end', () => console.log(cache[roomID][session.currentlyPlaying.id]))
                 }
-                io.to(roomID).emit('song', session.currentlyPlaying.id, cache[roomID][session.currentlyPlaying.id]) 
             }
             if (session?.queue[0]?.id) {
                 if (!cache[roomID][session?.queue[0]?.id]) {
                     let info = await ytdl.getInfo(session.queue[0].url);
                     let format = ytdl.chooseFormat(info.formats, { quality: "highestaudio", filter: "audioonly" })
-                    let vid = await stream2buffer(ytdl(session.queue[0].url, { format: format }))
-                    cache[roomID][session.queue[0].id] = { buffer: vid, mime: format.mimeType }
+                    let vid = await ytdl(session.queue[0].url, { format: format })
+                    cache[roomID][session.queue[0].id] = { buffer: Buffer.from([]), mime: format.mimeType }
+                    vid.on("data", chunk => cache[roomID][session.queue[0].id].buffer = Buffer.concat([cache[roomID][session.queue[0].id].buffer, chunk]));
+                    vid.on('end', () => io.to(roomID).emit('song', session.queue[0].id))
                 }
-                    io.to(roomID).emit('song', session.queue[0].id, cache[roomID][session.queue[0].id])
                 
             }
             for (let i = 0; i > 2; i++) {
@@ -84,7 +88,6 @@ io.on('connection', async (socket) => {
                         let vid = await stream2buffer(ytdl(session.songHistory[i].url, { format: format }))
                         cache[roomID][session.songHistory[i].id] = { buffer: vid, mime: format.mimeType }
                     }
-                    io.to(roomID).emit('song', session.songHistory[i].id, cache[roomID][session.songHistory[i].id])
                 }
             }
         }
@@ -247,7 +250,7 @@ app.get('/room/:id', (req, res) => {
 
 app.get('/room/:id/song/:songid', function (req, res) {
     if (cache[req.params.id]) {
-        res.send(cache[req.params.id][req.params.songid])
+        res.send(cache[req.params.id][req.params.songid].buffer)
     }
 })
 

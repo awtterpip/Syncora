@@ -90,7 +90,9 @@
 
 .time-slider {
     background: var(--page-bg);
+    display: inline-block;
 }
+
 
 .time-slider::-moz-range-progress {
     background-image: linear-gradient(30deg, var(--gradient-start), var(--gradient-middle), var(--gradient-end));
@@ -100,3 +102,30 @@ body {
   color:            var(--page-fg);
   background-color: var(--page-bg);
 }
+
+.time-slider::-moz-range-progress {
+    height: 100%;
+    background-image: linear-gradient(30deg, var(--gradient-start), var(--gradient-middle), var(--gradient-end));
+}
+
+
+.search-container {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+}
+
+
+.search-result {
+    height: 60px;
+    width: calc(100% - 8px);
+}
+
+.search-result-text {
+    display: block;
+    color: var(--page-fg);
+    text-overflow: ellipsis;
+    overflow:hidden;
+    white-space: nowrap;
+}
+
