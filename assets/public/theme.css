@@ -3,22 +3,24 @@
  *              */
 
 :root {
-  --gradient-start:  #F9728A;
-  --gradient-middle: #D879B4;
-  --gradient-end:    #7F8CB8;
+    --gradient-start:  #F9728A;
+    --gradient-middle: #D879B4;
+    --gradient-end:    #7F8CB8;
 
-  --page-bg: #161923;
-  --page-fg: #B7BCD4;
-  
-  --section-bg:               #1F2437;
-  --section-fg:               #B7BCD4;
-  
-  --section-button-bg:        #2C334D;
-  --section-button-fg:        #D7D9E6;
-  --section-button-bg-hover:  #1F2437;
-  --section-button-fg-hover:  #1F2437;
-  --section-button-bg-active: #2C334D;
-  --section-button-fg-active: #7F8CB8;
+    --page-bg: #161923;
+    --page-fg: #B7BCD4;
+
+    --section-bg:               #1F2437;
+    --section-fg:               #B7BCD4;
+
+    --section-button-bg:        #2C334D;
+    --section-button-fg:        #D7D9E6;
+    --section-button-bg-hover:  #1F2437;
+    --section-button-fg-hover:  #1F2437;
+    --section-button-bg-active: #2C334D;
+    --section-button-fg-active: #7F8CB8;
+
+    --text-shadow: #16192350;
 }
 
 /*                      *
@@ -44,6 +46,8 @@
 
     color: var(--section-button-fg);
     background-image: linear-gradient(30deg, var(--gradient-middle), var(--gradient-end));
+    
+    text-shadow: 0 0 8px var(--text-shadow);
 }
 
 .searchbar-item:focus-visible,
