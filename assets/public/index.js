@@ -70,7 +70,8 @@ socket.on('update', async function (_session) {
         source = context.createBufferSource()
         source.buffer = cache[session.currentlyPlaying.id]
         source.connect(context.destination)
-        source.start(time / 1000)
+        console.log(time/1000)
+        source.start(0, time / 1000)
     }
     if (session.currentlyPlaying && (session.state.paused)) {
         source.stop()
