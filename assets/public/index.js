@@ -57,7 +57,7 @@ function getSongs(arr) {
         console.log(results)
         socket.emit('updateQueue', results)
     })
-}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
+}
 
 function prevSong() {
     if (cache[session.songHistory[0].id]) {
