@@ -1,180 +1,98 @@
-@import "animations.css";
-@import "colors.css";
+/*              *
+ * color scheme *
+ *              */
 
-.upper-section {
-    padding: 0;
-    margin: 0;
-    width: 100%;
+:root {
+  --gradient-start:  #F9728A;
+  --gradient-middle: #D879B4;
+  --gradient-end:    #7F8CB8;
+
+  --page-bg: #161923;
+  --page-fg: #B7BCD4;
+  
+  --section-bg:               #1F2437;
+  --section-fg:               #B7BCD4;
+  
+  --section-button-bg:        #2C334D;
+  --section-button-fg:        #D7D9E6;
+  --section-button-bg-hover:  #1F2437;
+  --section-button-fg-hover:  #1F2437;
+  --section-button-bg-active: #2C334D;
+  --section-button-fg-active: #7F8CB8;
 }
 
+/*                      *
+ * other theme settings *
+ *                      */
+
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono&family=Ubuntu:wght@300&display=swap');
+@import "animations.css";
+
 .panel {
-    box-sizing: border-box;
-    margin: 8px;
-    padding: 8px;
     border-radius: 7px;
 
     color: var(--section-bg);
     background-color: var(--section-bg);
 }
 
-div {
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-}
-
-.searchbar {
-    user-select: none;
-
-    color: var(--section-bg);
-    background-color: var(--section-bg);
-
-    height: auto;
-    display: inline-flex;
-}
-
-.searchbar input {
-    outline: none;
-    border-style: hidden;
+.searchbar-item {
     font-family: 'Ubuntu';
-    font-size: 16px;
-    font-weight: 350;
-    border-radius: 4px;
-    background-color: var(--section-button-bg);
-    background-image: linear-gradient(30deg, var(--gradient-middle), var(--gradient-end));
+    font-weight: 400;
 
-    /*first number is top and bottom second is left and right */
-    padding: 4px 8px;
-    transition: 0.1s ease-in-out;
-    margin-right: 8px;
+    border-radius: 4px;
+
+    color: var(--section-button-fg);
+    background-image: linear-gradient(30deg, var(--gradient-middle), var(--gradient-end));
 }
 
-.searchbar input:focus-visible,
-.searchbar input:hover {
+.searchbar-item:focus-visible,
+.searchbar-item:hover {
     color: var(--section-button-fg-hover);
     background-image: linear-gradient(30deg, var(--gradient-start), var(--gradient-middle));
-
-    cursor: pointer;
 }
 
-.searchbar input:active {
+.searchbar-item:active {
     color: var(--section-button-fg-hover);
     opacity: 50%;
-}
-
-.searchbar button {
-  outline: none;
-  font-family: 'Ubuntu';
-  font-size: 1em;
-  color: var(--section-button-fg);
-  background-color: var(--section-button-bg);
-  background-image: linear-gradient(30deg, var(--gradient-middle), var(--gradient-end));
-  border-radius: 4px;
-  border-width: 0px;
-  position: relative;
-  padding: 4px;
-  padding-right: 4px;
-  padding-left: 4px;
-  padding-left: 8px;
-  padding-right: 8px;
-  transition: 0.1s ease-in-out;
-}
-
-.searchbar button:focus-visible,
-.searchbar button:hover {
-  color: var(--section-button-fg-hover);
-  background-image: linear-gradient(30deg, var(--gradient-start), var(--gradient-middle));
-  cursor: pointer;
-}
-
-.searchbar button:active {
-    color: var(--section-button-fg-hover);
-    opacity: 50%;
-
-    top: 0.075em;
 }
 
 .playback-controls {
-    position: fixed;
-    user-select: none;
+    border-radius: 7px;
+
     color: var(--section-bg);
     background-color: var(--section-bg);
-    bottom: 0;
-    border-radius: 7px;
-    width: calc(100% - 16px);
-}
-
-.playback-buttons {
-    align-content: center;
-    justify-content: center;
-    display: flex;
 }
 
 .playback-controls button {
-    outline: none;
-
     font-family: 'Ubuntu';
-    font-size: 24px;
-
-    color: var(--section-button-fg);
-    background-color: var(--section-button-bg);
-    background-image: linear-gradient(30deg, var(--gradient-middle), var(--gradient-end));
 
     border-radius: 7px;
-    border-width: 0px;
 
-    position: relative;
-
-    padding: 4px;
-    padding-left: 8px;
-    padding-right: 8px;
-    margin-right: 8px;
-
-    transition: 0.1s ease-in-out;
+    color: var(--section-button-fg);
+    background-image: linear-gradient(30deg, var(--gradient-middle), var(--gradient-end));
 }
 
 .playback-controls button:focus-visible,
 .playback-controls button:hover {
     color: var(--section-button-fg-hover);
     background-image: linear-gradient(30deg, var(--gradient-start), var(--gradient-middle));
-
-    cursor: pointer;
 }
 
 .playback-controls button:active {
     color: var(--section-button-fg-hover);
     opacity: 50%;
-
-    top: 0.075em;
-}
-
-.time-slider-container {
-    box-sizing: border-box;
-    width: 100%;
-    margin-top: 4px;
 }
 
 .time-slider {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 4px;
-    transition: 0.1s ease-in-out;
     background: var(--page-bg);
-    display: inline-block;
-}
-
-.time-slider:hover {
-    height: 12px
-}
-
-.time-slider::-moz-range-thumb {
-    width: 5px;
-    height: 100%;
-    background: none;
-    border: none;
-    cursor: pointer;
 }
 
 .time-slider::-moz-range-progress {
-    height: 100%;
     background-image: linear-gradient(30deg, var(--gradient-start), var(--gradient-middle), var(--gradient-end));
+}
+
+body {
+  color:            var(--page-fg);
+  background-color: var(--page-bg);
 }

@@ -1,24 +1,127 @@
-@import "colors.css";
 @import "theme.css";
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono&family=Ubuntu:wght@300&display=swap');
+
+.upper-section {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.panel {
+    margin: 8px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.panel :not(:last-child) {
+    margin-right: 8px;
+}
+
+div {
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+}
+
+.searchbar {
+    display: inline-flex;
+    user-select: none;
+    height: auto;
+}
+
+.searchbar-item {
+    position: relative;
+    outline: none;
+    border-style: hidden;
+    padding: 4px 8px;
+    font-size: 16px;
+    transition: 0.1s ease-in-out;
+}
+
+.searchbar-item:focus-visible,
+.searchbar-item:hover,
+.searchbar-item:active {
+    cursor: pointer;
+}
+
+.searchbar-item:active {
+    top: 0.075em;
+}
+
+.playback-controls {
+    position: fixed;
+    bottom: 0;
+    width: calc(100% - 16px);
+    user-select: none;
+}
+
+.playback-buttons {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+.playback-buttons button {
+    position: relative;
+    margin-bottom: 4px;
+    outline: none;
+    border: none;
+    padding: 4px 8px;
+
+    font-size: 24px;
+    transition: 0.1s ease-in-out;
+}
+
+.playback-buttons button:focus-visible,
+.playback-buttons button:hover,
+.playback-buttons button:active {
+    cursor: pointer;
+}
+
+.playback-buttons button:active {
+    top: 0.075em;
+}
+
+/* fix me i'm offset to the right and saphira's too dum to figure it out adsjfhgvsdhf */
+.time-slider-container {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.time-slider {
+    display: inline-block;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 4px;
+    transition: 0.1s ease-in-out;
+}
+
+.time-slider:hover {
+    height: 12px
+}
+
+.time-slider::-moz-range-thumb {
+    border: none;
+    background: none;
+    height: 100%;
+    width: 5px;
+    cursor: pointer;
+}
+
+.time-slider::-moz-range-progress {
+    height: 100%;
+}
 
 body {
-  color:            var(--page-fg);
-  background-color: var(--page-bg);
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
 }
 
 .svg-icon {
-  position: relative;
-  flex-shrink: 0;
-  height: 1em;
-  width: 1em;
-
-  fill: currentColor;
-
-  transition: fill .3s;
+    position: relative;
+    flex-shrink: 0;
+    height: 1em;
+    width: 1em;
+    fill: currentColor;
+    transition: fill .3s;
 }
