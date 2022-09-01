@@ -1,49 +1,62 @@
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<link rel="stylesheet" href="/base.css">
-<script src="/socket.io/socket.io.js"></script>
-<script src="/index.js"></script>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <link rel="stylesheet" href="/base.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/index.js"></script>
+  </head>
+  
+  <body>
+    <div class="upper-section">
+      <div class="searchbar panel">
+        <input id="search">
+        <button onclick="addSong()">
+          <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="24px" height="24px">
+            <title>
+              Add a track to the queue
+            </title>
+            <path d="M232 280L64 280 64 232 232 232 232 64 280 64 280 232 448 232 448 280 280 280 280 448 232 448 232 280Z" />
+          </svg>
+        </button>
+      </div>
 
-<body>
-  <div class='upper-section'>
-    <div class="searchbar panel">
-      <input id="search"></input>
+      <div id="queue"></div>
     </div>
 
-    <button onclick="addSong()">add song to queue</button>
-    <div id="queue"></div>
-  </div>
+    <div class="playback-controls panel">
+      <div class="playback-buttons">
+        <button class="prev" onclick="prevSong()">
+          <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="-78.5 0 512 512">
+            <title>
+              Previous track
+            </title>
+            <path d="M257 64L291 98 128 262 291 426 257 460 61 262 257 64Z"></path>
+          </svg>
+        </button>
 
-  <div class="playback-controls panel">
-    <div class="playback-buttons">
-      <button class="prev" onclick='prevSong()'>
-        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="-78.5 0 512 512">
-          <title>
-            Previous track
-          </title>
-          <path d="M257 64L291 98 128 262 291 426 257 460 61 262 257 64Z" />
-        </svg>
-      </button>
+        <button class="play" onclick="playButton()">
+          <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="-60 0 512 512">
+            <title>
+              Play/pause track
+            </title>
+            <path d="M64 96L328 256 64 416 64 96Z"></path>
+          </svg>
+        </button>
 
-      <button class="play" onclick='playButton()'>
-        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="-60 0 512 512">
-          <title>
-            Play/pause track
-          </title>
-          <path d="M64 96L328 256 64 416 64 96Z" />
-        </svg>
-      </button>
-
-      <button class="next" onclick="nextSong()">
-        <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="-77 0 512 512">
-          <title>
-            Next track
-          </title>
-          <path d="M98 460L64 426 227 262 64 98 98 64 294 262 98 460Z" />
-        </svg>
-      </button>
+        <button class="next" onclick="nextSong()">
+          <svg class="svg-icon" xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" viewBox="-77 0 512 512">
+            <title>
+              Next track
+            </title>
+            <path d="M98 460L64 426 227 262 64 98 98 64 294 262 98 460Z"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="time-slider-container">
+        <input type="range" min="1" max="1000" value="50" class="time-slider" id="time-slider">
+      </div>
     </div>
-    <div class="time-slider-container">
-      <input type="range" min="1" max="1000" value="50" class="time-slider" id="time-slider">
-    </div>
-  </div>
-</body>
+  </body>
+
+  <style type="text/css"></style>
+</html>
