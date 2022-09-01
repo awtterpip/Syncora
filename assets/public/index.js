@@ -19,6 +19,10 @@ socket.on('song', async function (id, song) {
     var audio = new Audio(URL.createObjectURL(new Blob([song.buffer], { type: song.mime })))
     cache[id] = audio
     console.log(id)
+    if(queueUpdate) {
+        socket.emit('getUpdate')
+        queueUpdate=false;
+    }
 })
 
 
@@ -53,15 +57,7 @@ function getSongs(arr) {
         console.log(results)
         socket.emit('updateQueue', results)
     })
-}
-
-function nextSong() {
-    if (cache[session.queue[0].id]) {
-        socket.emit('next')
-    } else {
-        console.log('please wait for songs to be cached...')
-    }
-}
+}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
 
 function prevSong() {
     if (cache[session.songHistory[0].id]) {
