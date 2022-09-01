@@ -1,5 +1,5 @@
 import express from "express";
-import { createServer } from "https"
+import { createServer } from "http"
 import { Server } from 'socket.io'
 import ytdl from 'ytdl-core'
 import LastFM = require('last-fm')
@@ -8,12 +8,8 @@ import * as fs from 'fs'
 import fetch from "node-fetch";
 import { apiKeys, getSongFromLink, generateID, stream2buffer } from './utils'
 
-const options = {
-    key: fs.readFileSync('./localhost-key.pem'),
-    cert: fs.readFileSync('./localhost.pem')
-};
 const app = express();
-const server = createServer(options, app);
+const server = createServer(app);
 const io = new Server(server);
 const lastfm = new LastFM(apiKeys.LastFM)
 const trackInfo = util.promisify(lastfm.trackInfo)
