@@ -46,6 +46,12 @@ div {
     top: 0.075em;
 }
 
+.search-container {
+    display: inline-block;
+    flex-direction: column;
+    width: 25%;
+}
+
 .playback-controls {
     position: fixed;
     bottom: 0;

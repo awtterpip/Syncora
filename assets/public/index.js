@@ -2,23 +2,22 @@ var socket = io()
 var roomID = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
 var results;
 var cache = {}
-/**@typedef {hi:string} */
 var session
 var sound
-if (roomID) {
-    socket.emit('join', roomID);
-}
 var isSearching = false;
 var source
 var context = new AudioContext()
 const removeSearchResults = () => document.querySelectorAll('.search-result').forEach(el => el.remove());
+
 document.getElementById('search').addEventListener('keydown', ev => {
     if(!isSearching) {
         search(document.getElementById('search').value)
     }
 })
 
-
+if (roomID) {
+    socket.emit('join', roomID);
+}
 
 socket.on('song', async function (id, song) {
     let arr = new Uint8Array([])
@@ -50,7 +49,6 @@ socket.on('song', async function (id, song) {
                         push();
                     });
                 }
-
                 push();
             },
         })

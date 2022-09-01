@@ -45,7 +45,7 @@ io.on('connection', async (socket) => {
     }
 
     async function searchSong(search) {
-        let results = await youtube.search(search, {type: 'video'});
+        let results = await youtube.search(search, { type: 'video' });
         console.log(results)
         io.to(socket.id).emit('searchResults', results.videos)
     }
@@ -58,36 +58,28 @@ io.on('connection', async (socket) => {
                     cache[roomID][song] = undefined
                 }
             }
-            if (session?.currentlyPlaying) {
-                if (!cache[roomID][session?.currentlyPlaying?.id]) {
-                    let info = await ytdl.getInfo(session.currentlyPlaying.url);
-                    let format = ytdl.chooseFormat(info.formats, { quality: "highestaudio", filter: "audioonly" })
-                    let vid = ytdl(session.currentlyPlaying.url, { format: format })
-                    let curid = session.currentlyPlaying.id
-                    cache[roomID][curid] = { buffer: Buffer, mime: format.mimeType }
-                    vid.on("data", chunk => cache[roomID][session.currentlyPlaying].buffer = cache[roomID][session.currentlyPlaying].buffer.concat(chunk));
-                    vid.on('end', () => console.log(cache[roomID][session.currentlyPlaying.id]))
-                }
+            if (session?.currentlyPlaying?.id) {
+                createCache(session.currentlyPlaying)
             }
             if (session?.queue[0]?.id) {
-                if (!cache[roomID][session?.queue[0]?.id]) {
-                    let info = await ytdl.getInfo(session.queue[0].url);
-                    let format = ytdl.chooseFormat(info.formats, { quality: "highestaudio", filter: "audioonly" })
-                    let vid = await ytdl(session.queue[0].url, { format: format })
-                    cache[roomID][session.queue[0].id] = { buffer: Buffer.from([]), mime: format.mimeType }
-                    vid.on("data", chunk => cache[roomID][session.queue[0].id].buffer = Buffer.concat([cache[roomID][session.queue[0].id].buffer, chunk]));
-                    vid.on('end', () => io.to(roomID).emit('song', session.queue[0].id))
-                }
-                
+                createCache(session.queue[0])
             }
-            for (let i = 0; i > 2; i++) {
-                if (session?.songHistory[i]) {
-                    if (!cache[roomID][session?.songHistory[i]?.id]) {
-                        let info = await ytdl.getInfo(session.songHistory[i].url);
-                        let format = ytdl.chooseFormat(info.formats, { quality: "highestaudio", filter: "audioonly" })
-                        let vid = await stream2buffer(ytdl(session.songHistory[i].url, { format: format }))
-                        cache[roomID][session.songHistory[i].id] = { buffer: vid, mime: format.mimeType }
-                    }
+            if(session?.songHistory[0]?.id) {
+                createCache(session.songHistory[0])
+            }
+            async function createCache(song: Song) {
+                if (!cache[roomID][song.id]) {
+                    let info = await ytdl.getInfo(song.url);
+                    let format = ytdl.chooseFormat(info.formats, { quality: 'highestaudio', filter: 'audioonly' });
+                    let vid = await ytdl(song.url, { format: format });
+                    let curid = song.id;
+                    cache[roomID][curid] = { buffer: Buffer.from([]), mime: format.mimeType }
+                    vid.on("data", chunk => {
+                        cache[roomID][curid].buffer = Buffer.concat([cache[roomID][curid].buffer, chunk])
+                    });
+                    vid.on('end', () => {
+                        io.to(roomID).emit('song', curid)
+                    });
                 }
             }
         }
@@ -165,7 +157,7 @@ io.on('connection', async (socket) => {
     }
     async function nextSong() {
         console.log(roomID)
-        if(sessions[roomID]) {
+        if (sessions[roomID]) {
             pause()
             if (sessions[roomID].currentlyPlaying) {
                 sessions[roomID].songHistory.unshift(sessions[roomID].currentlyPlaying)
@@ -190,7 +182,7 @@ io.on('connection', async (socket) => {
     }
 
     function prevSong() {
-        if(sessions[roomID]) {
+        if (sessions[roomID]) {
             if (sessions[roomID].currentlyPlaying) {
                 sessions[roomID].queue.unshift(sessions[roomID].currentlyPlaying)
             }

@@ -50,17 +50,6 @@
     text-shadow: 0 0 8px var(--text-shadow);
 }
 
-.searchbar-item:focus-visible,
-.searchbar-item:hover {
-    color: var(--section-button-fg-hover);
-    background-image: linear-gradient(30deg, var(--gradient-start), var(--gradient-middle));
-}
-
-.searchbar-item:active {
-    color: var(--section-button-fg-hover);
-    opacity: 50%;
-}
-
 .playback-controls {
     border-radius: 7px;
 
@@ -109,11 +98,7 @@ body {
 }
 
 
-.search-container {
-    display: flex;
-    flex-direction: column;
-    width: 25%;
-}
+
 
 
 .search-result {
