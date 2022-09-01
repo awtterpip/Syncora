@@ -4,6 +4,7 @@ var results;
 var cache = {}
 var session
 var sound
+var timePercent;
 var isSearching = false;
 var source
 var context = new AudioContext()
@@ -66,7 +67,7 @@ socket.on('update', async function (_session) {
     if (session.currentlyPlaying && (!session.state.paused)) {
         var today = new Date()
         console.log(today.getTime(), session.state.startTime * -1, session.currentlyPlaying.time * 1000, session.state.remainingTime * -1)
-        var time = today.getTime() - session.state.startTime + session.currentlyPlaying.time * 1000 - session.state.remainingTime
+        let time = today.getTime() - session.state.startTime + session.currentlyPlaying.time * 1000 - session.state.remainingTime
         source = context.createBufferSource()
         source.buffer = cache[session.currentlyPlaying.id]
         source.connect(context.destination)
@@ -151,9 +152,11 @@ function addSong(link) {
 
 setInterval(() => {
     if (session.currentlyPlaying) {
-        let time = Math.round(((new Date()).getTime() - session.state.startTime + session.currentlyPlaying.time * 1000 - session.state.remainingTime) / session.currentlyPlaying.time)
-        document.getElementById('time-slider').value = time
+        if(!session.state.paused) {
+            timePercent = Math.round(((new Date()).getTime() - session.state.startTime + session.currentlyPlaying.time * 1000 - session.state.remainingTime) / session.currentlyPlaying.time)
+        }
+        document.getElementById('time-slider').value = timePercent
     } else {
         document.getElementById('time-slider').value = 0;
     }
-})
+}, 100)
