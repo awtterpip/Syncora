@@ -67,6 +67,14 @@ function prevSong() {
     }
 }
 
+function nextSong() {
+    if (cache[session.queue[0].id]) {
+        socket.emit('next')
+    } else {
+        console.log('please wait for songs to be cached...')
+    }
+}
+
 function playButton() {
     if (session.state.paused) {
         socket.emit('play')
