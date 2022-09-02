@@ -7,21 +7,21 @@ var sound
 var timePercent;
 var isSearching = false;
 var joined = false
-var rerunUpdate=false;
+var rerunUpdate = false;
 var source
 var context
-var gainNode 
+var gainNode
 const removeSearchResults = () => document.querySelectorAll('.search-result').forEach(el => el.remove());
 
 document.getElementById('search').addEventListener('keydown', ev => {
-    if(!isSearching) {
+    if (!isSearching) {
         search(document.getElementById('search').value)
     }
 })
 
 document.body.addEventListener('click', ev => {
-    if(!joined) {
-        joined=true
+    if (!joined) {
+        joined = true
         console.log('hi')
         context = new AudioContext()
         gainNode = context.createGain()
@@ -29,56 +29,59 @@ document.body.addEventListener('click', ev => {
         if (roomID) {
             socket.emit('join', roomID);
         }
-        
+
     }
 })
 
 socket.on('join', () => {
-    if(!session) {
+    if (!session) {
         setTimeout(() => socket.emit('rejoin'))
-    } else if(!session.state.paused) {
+    } else if (!session.state.paused) {
         rerunUpdate = true;
     }
 })
 
 socket.on('song', async function (id, song) {
     let arr = new Uint8Array([])
-    let buf = await fetch(`/room/${roomID}/song/${id}`).then(res => {
-        const reader = res.body.getReader()
-        return new ReadableStream({
-            start(controller) {
-                // The following function handles each data chunk
-                function push() {
-                    // "done" is a Boolean and value a "Uint8Array"
-                    reader.read().then(async ({ done, value }) => {
-                        // If there is no more data to read
-                        if (done) {
-                            console.log('done', done);
+    if (!cache[id]) {
+        let buf = await fetch(`/room/${roomID}/song/${id}`).then(res => {
+            const reader = res.body.getReader()
+            return new ReadableStream({
+                start(controller) {
+                    // The following function handles each data chunk
+                    function push() {
+                        // "done" is a Boolean and value a "Uint8Array"
+                        reader.read().then(async ({ done, value }) => {
+                            // If there is no more data to read
+                            if (done) {
+                                console.log('done', done);
 
-                            cache[id] = await context.decodeAudioData(arr.buffer);
-                            if(rerunUpdate) {
-                                socket.emit('getUpdate')
+                                cache[id] = await context.decodeAudioData(arr.buffer);
+                                if (rerunUpdate) {
+                                    rerunUpdate = false;
+                                    socket.emit('getUpdate')
+                                }
+                                console.log(cache[id])
+                                return arr;
                             }
-                            console.log(cache[id])
-                            return arr;
-                        }
-                        // Get the data and send it to the browser via the controller
-                        controller.enqueue(value);
-                        // Check chunks by logging to the console
+                            // Get the data and send it to the browser via the controller
+                            controller.enqueue(value);
+                            // Check chunks by logging to the console
 
-                        let newArr = new Uint8Array(arr.length + value.length)
-                        newArr.set(arr)
-                        newArr.set(value, arr.length);
-                        arr = newArr
-                        console.log(arr)
-                        push();
-                    });
-                }
-                push();
-            },
+                            let newArr = new Uint8Array(arr.length + value.length)
+                            newArr.set(arr)
+                            newArr.set(value, arr.length);
+                            arr = newArr
+                            console.log(arr)
+                            push();
+                        });
+                    }
+                    push();
+                },
+            })
+
         })
-
-    })
+    }
 })
 
 socket.on('update', async function (_session) {
@@ -89,10 +92,11 @@ socket.on('update', async function (_session) {
         var today = new Date()
         console.log(today.getTime(), session.state.startTime * -1, session.currentlyPlaying.time * 1000, session.state.remainingTime * -1)
         let time = today.getTime() - session.state.startTime + session.currentlyPlaying.time * 1000 - session.state.remainingTime
+        if(source) source.stop()
         source = context.createBufferSource()
         source.buffer = cache[session.currentlyPlaying.id]
         source.connect(gainNode)
-        console.log(time/1000)
+        console.log(time / 1000)
         source.start(0, time / 1000)
     }
     if (session.currentlyPlaying && (session.state.paused)) {
@@ -135,7 +139,7 @@ function playButton() {
 
 
 function search(query) {
-    isSearching=true
+    isSearching = true
     socket.emit('searchSong', query);
     socket.on('searchResults', results => {
         document.querySelectorAll('.search-result').forEach(el => el.remove());
@@ -144,7 +148,7 @@ function search(query) {
             let title = dom.appendChild(document.createElement('span'))
             let artist = dom.appendChild(document.createElement('span'))
 
-            
+
             title.className = 'search-result-text'
             artist.className = 'search-result-text'
 
@@ -157,13 +161,13 @@ function search(query) {
                 addSong(results[i].link)
                 removeSearchResults()
             })
-            isSearching=false
+            isSearching = false
         }
     })
 }
 
 function setVolume() {
-    gainNode.gain.value = document.getElementById('volume-slider').value/100
+    gainNode.gain.value = document.getElementById('volume-slider').value / 100
 }
 
 function addSong(link) {
@@ -177,7 +181,7 @@ function addSong(link) {
 
 setInterval(() => {
     if (session.currentlyPlaying) {
-        if(!session.state.paused) {
+        if (!session.state.paused) {
             timePercent = Math.round(((new Date()).getTime() - session.state.startTime + session.currentlyPlaying.time * 1000 - session.state.remainingTime) / session.currentlyPlaying.time)
         }
         document.getElementById('time-slider').value = timePercent
