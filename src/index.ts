@@ -46,47 +46,70 @@ io.on('connection', async (socket) => {
 
     async function searchSong(search) {
         let results = await youtube.search(search, { type: 'video' });
-        console.log(results)
         io.to(socket.id).emit('searchResults', results.videos)
     }
 
     async function cacheSongs() {
-        if (cache[roomID]) {
-            const session = sessions[roomID]
-            for (const song in cache[roomID]) {
-                if (!(session.queue[0]?.id == song || session.currentlyPlaying?.id == song || session.songHistory[0]?.id == song || session.songHistory[1]?.id == song)) {
-                    cache[roomID][song] = undefined
+        return new Promise((resolve, reject) => {
+            if (cache[roomID]) {
+                var i = 0;
+                const session = sessions[roomID]
+                for (const song in cache[roomID]) {
+                    if (!(session.queue[0]?.id == song || session.currentlyPlaying?.id == song || session.songHistory[0]?.id == song || session.songHistory[1]?.id == song)) {
+                        cache[roomID][song] = undefined
+                    }
+                }
+                if (session?.currentlyPlaying?.id) {
+                    createCache(session.currentlyPlaying)
+                } else {
+                    i++
+                }
+                if (session?.queue[0]?.id) {
+                    createCache(session.queue[0])
+                } else {
+                    i++
+                }
+                if (session?.songHistory[0]?.id) {
+                    createCache(session.songHistory[0])
+                } else {
+                    i++
+                    if(i==3) {
+                        resolve('yay')
+                    }
+                }
+                async function createCache(song: Song) {
+                    if (!cache[roomID][song.id]) {
+                        let info = await ytdl.getInfo(song.url);
+                        let format = ytdl.chooseFormat(info.formats, { quality: 'highestaudio', filter: 'audioonly' });
+                        let vid = await ytdl(song.url, { format: format });
+                        let curid = song.id;
+                        cache[roomID][curid] = { buffer: Buffer.from([]), mime: format.mimeType }
+                        vid.on("data", chunk => {
+                            cache[roomID][curid].buffer = Buffer.concat([cache[roomID][curid].buffer, chunk])
+                        });
+                        vid.on('end', () => {
+                            io.to(roomID).emit('song', curid)
+                            i++
+                            if(i==3) {
+                                resolve('yay')
+                            }
+                            
+                        });
+                    } else {
+                        io.to(roomID).emit('song', song.id)
+                        i++
+                        if(i==3) {
+                            resolve('yay')
+                        }
+                    }
                 }
             }
-            if (session?.currentlyPlaying?.id) {
-                createCache(session.currentlyPlaying)
-            }
-            if (session?.queue[0]?.id) {
-                createCache(session.queue[0])
-            }
-            if(session?.songHistory[0]?.id) {
-                createCache(session.songHistory[0])
-            }
-            async function createCache(song: Song) {
-                if (!cache[roomID][song.id]) {
-                    let info = await ytdl.getInfo(song.url);
-                    let format = ytdl.chooseFormat(info.formats, { quality: 'highestaudio', filter: 'audioonly' });
-                    let vid = await ytdl(song.url, { format: format });
-                    let curid = song.id;
-                    cache[roomID][curid] = { buffer: Buffer.from([]), mime: format.mimeType }
-                    vid.on("data", chunk => {
-                        cache[roomID][curid].buffer = Buffer.concat([cache[roomID][curid].buffer, chunk])
-                    });
-                    vid.on('end', () => {
-                        io.to(roomID).emit('song', curid)
-                    });
-                }
-            }
-        }
+        })
+
     }
 
 
-    function join(id: string) {
+    async function join(id: string) {
         if (/^[a-zA-Z0-9]+$/.test(id)) {
             if (socket.rooms.size > 1) {
                 socket.leave([...socket.rooms][1])
@@ -109,8 +132,8 @@ io.on('connection', async (socket) => {
             if (!cache[roomID]) {
                 cache[roomID] = {}
             }
-            io.to(id).emit('join', socket.id);
-            cacheSongs()
+            io.to(socket.id).emit('join')
+            await cacheSongs()
             io.to(socket.id).emit('update', JSON.stringify(sessions[id]));
         } else {
             io.to(socket.id).emit('error', "roomID can only contain alphanumeric characters");
@@ -215,6 +238,7 @@ io.on('connection', async (socket) => {
         }
     }
 
+    socket.on('rejoin', () => io.to(socket.id).emit('join'))
     socket.on('getUpdate', () => io.to(socket.id).emit('update', JSON.stringify(sessions[roomID])))
     socket.on('searchSong', searchSong)
     socket.on('ready', () => console.log('ready'))

@@ -6,10 +6,11 @@ var session
 var sound
 var timePercent;
 var isSearching = false;
+var joined = false
+var rerunUpdate=false;
 var source
-var context = new AudioContext()
-var gainNode = context.createGain()
-gainNode.connect(context.destination)
+var context
+var gainNode 
 const removeSearchResults = () => document.querySelectorAll('.search-result').forEach(el => el.remove());
 
 document.getElementById('search').addEventListener('keydown', ev => {
@@ -18,9 +19,27 @@ document.getElementById('search').addEventListener('keydown', ev => {
     }
 })
 
-if (roomID) {
-    socket.emit('join', roomID);
-}
+document.body.addEventListener('click', ev => {
+    if(!joined) {
+        joined=true
+        console.log('hi')
+        context = new AudioContext()
+        gainNode = context.createGain()
+        gainNode.connect(context.destination)
+        if (roomID) {
+            socket.emit('join', roomID);
+        }
+        
+    }
+})
+
+socket.on('join', () => {
+    if(!session) {
+        setTimeout(() => socket.emit('rejoin'))
+    } else if(!session.state.paused) {
+        rerunUpdate = true;
+    }
+})
 
 socket.on('song', async function (id, song) {
     let arr = new Uint8Array([])
@@ -37,6 +56,9 @@ socket.on('song', async function (id, song) {
                             console.log('done', done);
 
                             cache[id] = await context.decodeAudioData(arr.buffer);
+                            if(rerunUpdate) {
+                                socket.emit('getUpdate')
+                            }
                             console.log(cache[id])
                             return arr;
                         }
@@ -57,13 +79,10 @@ socket.on('song', async function (id, song) {
         })
 
     })
-    var link = URL.createObjectURL(new Blob([buf]))
-    cache[id] = new Audio(`/room/${roomID}/song/${id}`)
 })
 
 socket.on('update', async function (_session) {
     console.log(JSON.parse(_session))
-
     session = JSON.parse(_session)
     document.getElementById('queue').innerHTML = session.queue.map(val => val.name)
     if (session.currentlyPlaying && (!session.state.paused)) {
