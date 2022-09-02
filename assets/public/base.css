@@ -56,11 +56,17 @@ div {
     font-size: 120%;
 }
 
-#queue {
+#queue-container {
     margin-left: 8px;
     padding: 8px;
     display: flex;
+    flex-direction: column;
+}
+
+.queue-item {
+    padding: 8px;
     width: 25%;
+    margin-bottom: 10px;
 }
 
 .playback-controls {
@@ -72,6 +78,7 @@ div {
 
 .playback-controls-upper {
     display:flex;
+
 }
 
 .playback-buttons {

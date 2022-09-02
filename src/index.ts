@@ -1,15 +1,12 @@
+import compression from 'compression';
 import express from "express";
-import { createServer } from "http"
-import { parse } from 'node-html-parser'
-import { Server } from 'socket.io'
-import ytdl from 'ytdl-core'
-import LastFM = require('last-fm')
-import util = require('util')
-import compression = require('compression');
-import * as fs from 'fs'
-import fetch from "node-fetch";
+import { createServer } from "http";
+import LastFM from 'last-fm';
 import { youtube } from 'scrape-youtube';
-import { apiKeys, getSongFromLink, generateID, stream2buffer } from './utils'
+import { Server } from 'socket.io';
+import util from 'util';
+import ytdl from 'ytdl-core';
+import { apiKeys, generateID, getSongFromLink } from "./utils";
 
 const app = express();
 const server = createServer(app);
@@ -17,12 +14,9 @@ const io = new Server(server);
 const lastfm = new LastFM(apiKeys.LastFM)
 const trackInfo = util.promisify(lastfm.trackInfo)
 const exec = util.promisify(require('child_process').exec)
-var sessions: Sessions = {
+let sessions: Sessions = {}
+let cache = {}
 
-}
-var cache = {
-
-}
 
 io.of('/').adapter.on('leave-room', (room, id) => {
     if (room != id) {
