@@ -83,10 +83,6 @@
 }
 
 
-.time-slider::-moz-range-progress {
-    background-image: linear-gradient(30deg, var(--gradient-start), var(--gradient-middle), var(--gradient-end));
-}
-
 body {
   color:            var(--page-fg);
   background-color: var(--page-bg);
@@ -97,8 +93,20 @@ body {
     background-image: linear-gradient(30deg, var(--gradient-start), var(--gradient-middle), var(--gradient-end));
 }
 
+.config-slider {
+    background: none;
+}
 
+.config-slider::-moz-range-thumb {
+    background-color: var(--section-button-fg);
+}
 
+.config-slider::-moz-range-track {
+    background-color: var(--page-bg)
+}
+.config-slider::-moz-range-progress {
+    background-image: linear-gradient(30deg, var(--gradient-start), var(--gradient-middle), var(--gradient-end));
+}
 
 
 .search-result {

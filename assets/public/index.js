@@ -8,6 +8,8 @@ var timePercent;
 var isSearching = false;
 var source
 var context = new AudioContext()
+var gainNode = context.createGain()
+gainNode.connect(context.destination)
 const removeSearchResults = () => document.querySelectorAll('.search-result').forEach(el => el.remove());
 
 document.getElementById('search').addEventListener('keydown', ev => {
@@ -70,7 +72,7 @@ socket.on('update', async function (_session) {
         let time = today.getTime() - session.state.startTime + session.currentlyPlaying.time * 1000 - session.state.remainingTime
         source = context.createBufferSource()
         source.buffer = cache[session.currentlyPlaying.id]
-        source.connect(context.destination)
+        source.connect(gainNode)
         console.log(time/1000)
         source.start(0, time / 1000)
     }
@@ -139,6 +141,10 @@ function search(query) {
             isSearching=false
         }
     })
+}
+
+function setVolume() {
+    gainNode.gain.value = document.getElementById('volume-slider').value/100
 }
 
 function addSong(link) {

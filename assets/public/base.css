@@ -59,10 +59,20 @@ div {
     user-select: none;
 }
 
+.playback-controls-upper {
+    display:flex;
+
+}
+
 .playback-buttons {
-    display: flex;
+    display: inline-flex;
+    flex-basis:33.3%;
     align-content: center;
     justify-content: center;
+}
+
+.current-song {
+    flex-basis:33.3%
 }
 
 .playback-buttons button {
@@ -90,6 +100,10 @@ div {
 .time-slider-container {
     box-sizing: border-box;
     width: 100%;
+}
+
+.config-slider {
+    -webkit-appearance: none;
 }
 
 .time-slider {
@@ -121,6 +135,12 @@ body {
     padding: 0;
     height: 100%;
     width: 100%;
+}
+
+.volume {
+    display: flex;
+    flex-basis: 33.3%;
+    flex-flow: row-reverse;
 }
 
 .svg-icon {
