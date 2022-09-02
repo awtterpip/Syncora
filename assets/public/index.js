@@ -91,7 +91,7 @@ socket.on('update', async function (_session) {
     if (session.currentlyPlaying && (!session.state.paused)) {
         var today = new Date()
         console.log(today.getTime(), session.state.startTime * -1, session.currentlyPlaying.time * 1000, session.state.remainingTime * -1)
-        let time = today.getTime() - session.state.startTime + session.currentlyPlaying.time * 1000 - session.state.remainingTime
+        let time = Math.max(today.getTime() - session.state.startTime + session.currentlyPlaying.time * 1000 - session.state.remainingTime, 0)
         if(source) source.stop()
         source = context.createBufferSource()
         source.buffer = cache[session.currentlyPlaying.id]
