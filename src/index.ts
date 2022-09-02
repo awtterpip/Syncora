@@ -5,6 +5,7 @@ import { Server } from 'socket.io'
 import ytdl from 'ytdl-core'
 import LastFM = require('last-fm')
 import util = require('util')
+import compression = require('compression');
 import * as fs from 'fs'
 import fetch from "node-fetch";
 import { youtube } from 'scrape-youtube';
@@ -251,6 +252,8 @@ io.on('connection', async (socket) => {
     socket.on('getSongs', getSongs)
     socket.on('ok', ok)
 });
+
+app.use(compression())
 
 server.listen(3000, () => {
     (console.log('listening on port 3000'));
