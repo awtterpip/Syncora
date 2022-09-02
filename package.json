@@ -1,5 +1,5 @@
 {
-  "name": "music-sync",
+  "name": "syncora",
   "version": "1.0.0",
   "description": "A web app to allow people to listen to music together.",
   "main": "dist/index.js",
@@ -9,14 +9,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sudopeye/music-sync.git"
+    "url": "git+https://github.com/sudopeye/Syncora.git"
   },
   "author": "sudopeye",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sudopeye/music-sync/issues"
+    "url": "https://github.com/sudopeye/Syncora/issues"
   },
-  "homepage": "https://github.com/sudopeye/music-sync#readme",
+  "homepage": "https://github.com/sudopeye/Syncora#readme",
   "dependencies": {
     "@types/express": "^4.17.13",
     "@types/node-fetch": "^2.6.2",
