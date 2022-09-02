@@ -52,6 +52,13 @@ div {
     width: 25%;
 }
 
+#queue {
+    margin-left: 8px;
+    padding: 8px;
+    display: flex;
+    width: 256px;
+}
+
 .playback-controls {
     position: fixed;
     bottom: 0;
@@ -104,6 +111,17 @@ div {
 
 .config-slider {
     -webkit-appearance: none;
+    border-radius: 7px;
+    height: 32px;
+    width: 128px;
+    display: inline-flex;
+}
+
+.config-slider::-moz-range-thumb {
+    border-radius: 16px;
+    height: 8px;
+    width: 8px;
+    border-width: 0px;
 }
 
 .time-slider {
