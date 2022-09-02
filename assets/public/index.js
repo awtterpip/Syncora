@@ -85,9 +85,18 @@ socket.on('song', async function (id, song) {
 })
 
 socket.on('update', async function (_session) {
+    let container = document.getElementById('queue-container')
     console.log(JSON.parse(_session))
     session = JSON.parse(_session)
-    document.getElementById('queue').innerHTML = session.queue.map(val => val.name)
+    let b = session.queue.map(val => {
+        let a = document.createElement("div")
+        a.innerText = val.name
+        a.className = "queue-item"
+        return a;
+        
+    })
+    b = b.filter(e => !Array.from(container.children).includes(e))
+    container.replaceChildren(...b)
     if (session.currentlyPlaying && (!session.state.paused)) {
         var today = new Date()
         console.log(today.getTime(), session.state.startTime * -1, session.currentlyPlaying.time * 1000, session.state.remainingTime * -1)

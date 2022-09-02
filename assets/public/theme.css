@@ -2,7 +2,7 @@
  * color scheme *
  *              */
 
-:root {
+ :root {
     --gradient-start:  #F9728A;
     --gradient-middle: #D879B4;
     --gradient-end:    #7F8CB8;
@@ -65,7 +65,8 @@
     color: var(--gradient-middle);
 }
 
-#queue {
+
+.queue-item {
     font-family: "Ubuntu";
     background-color: var(--section-bg);
     border-radius: 7px;
@@ -102,6 +103,7 @@
     background: var(--page-bg);
     display: inline-block;
 }
+
 
 body {
   color:            var(--page-fg);
