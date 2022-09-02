@@ -52,11 +52,15 @@ div {
     width: 25%;
 }
 
+.search-result :last-child {
+    font-size: 120%;
+}
+
 #queue {
     margin-left: 8px;
     padding: 8px;
     display: flex;
-    width: 256px;
+    width: 25%;
 }
 
 .playback-controls {
@@ -68,7 +72,6 @@ div {
 
 .playback-controls-upper {
     display:flex;
-
 }
 
 .playback-buttons {
