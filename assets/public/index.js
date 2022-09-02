@@ -180,7 +180,7 @@ function addSong(link) {
 }
 
 setInterval(() => {
-    if (session.currentlyPlaying) {
+    if (session) {
         if (!session.state.paused) {
             timePercent = Math.round(((new Date()).getTime() - session.state.startTime + session.currentlyPlaying.time * 1000 - session.state.remainingTime) / session.currentlyPlaying.time)
         }
