@@ -4,8 +4,7 @@
   "description": "A web app to allow people to listen to music together.",
   "main": "src/index.ts",
   "scripts": {
-    "build": "rimraf build && tsc",
-    "start": "bun run build && node build",
+    "start": "tsc && node build/index.js",
     "dev": "tsc && concurrently 'tsc -w' 'nodemon build'"
   },
   "repository": {
