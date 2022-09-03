@@ -163,6 +163,7 @@ io.on('connection', async (socket) => {
         }
     }
     function pause() {
+        console.log(`recived pause from ${roomID} state of room is ${sessions[roomID].state.paused ? "paused": "playing"}`)
         if ((!sessions[roomID]?.state?.paused) && roomID) {
             if (sessions[roomID].currentlyPlaying) {
                 clearTimeout(sessions[roomID].state.timer);
@@ -222,8 +223,11 @@ io.on('connection', async (socket) => {
     }
 
     function play() {
+        console.log(`recived play from ${roomID} state of room is ${sessions[roomID].state.paused ? "paused": "playing"}`)
         if (sessions[roomID]?.state?.paused && roomID) {
+            console.log(`${roomID} is paused`)
             if (sessions[roomID].currentlyPlaying) {
+                console.log(`${roomID} has something playing`)
 
                 sessions[roomID].state.timer = Number(setTimeout(nextSong, sessions[roomID].state.remainingTime));
                 sessions[roomID].state.startTime = (new Date()).getTime()
