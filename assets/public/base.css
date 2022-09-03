@@ -52,13 +52,16 @@ div {
     width: 25%;
 }
 
+.search-result {
+    margin-top: 0px;
+}
+
 .search-result :last-child {
     font-size: 120%;
 }
 
 #queue-container {
-    margin-left: 8px;
-    padding: 8px;
+    padding-left: 8px;
     display: flex;
     flex-direction: column;
 }
