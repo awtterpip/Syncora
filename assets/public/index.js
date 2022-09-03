@@ -179,7 +179,8 @@ function search(query) {
 }
 
 function setVolume() {
-    gainNode.gain.value = document.getElementById('volume-slider').value / 100
+    let lin = document.getElementById('volume-slider').value / 100
+    gainNode.gain.value = (10**lin-1)/(10-1)
 }
 
 function addSong(link) {
