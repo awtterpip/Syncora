@@ -55,7 +55,7 @@ socket.on('song', async function (id, song) {
                             // If there is no more data to read
                             if (done) {
                                 console.log('done', done);
-
+                                
                                 cache[id] = await context.decodeAudioData(arr.buffer);
                                 if (rerunUpdate) {
                                     rerunUpdate = false;
@@ -97,6 +97,8 @@ socket.on('update', async function (_session) {
     })
     b = b.filter(e => !Array.from(container.children).includes(e))
     container.replaceChildren(...b)
+    console.log(session.currentlyPlaying)
+    console.log(!session.state.paused)
     if (session.currentlyPlaying && (!session.state.paused)) {
         var today = new Date()
         console.log(today.getTime(), session.state.startTime * -1, session.currentlyPlaying.time * 1000, session.state.remainingTime * -1)
@@ -139,6 +141,7 @@ function prevSong() {
 }
 
 function playButton() {
+    console.log(session.state.paused ? "Paused" : "Playing")
     if (session.state.paused) {
         socket.emit('play')
     } else if (!session.state.paused) {

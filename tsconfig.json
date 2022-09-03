@@ -19,6 +19,7 @@
     "skipLibCheck": true
   },
   "exclude": [
-    "assets"
+    "assets",
+    "build"
   ]
 }
