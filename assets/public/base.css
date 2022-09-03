@@ -128,6 +128,7 @@ div {
     height: 32px;
     width: 128px;
     display: inline-flex;
+    outline: none;
 }
 
 .config-slider::-moz-range-thumb {
@@ -135,6 +136,24 @@ div {
     height: 8px;
     width: 8px;
     border-width: 0px;
+}
+
+.config-slider::-webkit-slider-thumb {
+    position: relative;
+    bottom: 3px;
+    -webkit-appearance: none;
+    border-radius: 16px;
+    height: 8px;
+    width: 8px;
+    border-width: 0px;
+}
+
+.time-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+}
+
+.config-slider::-webkit-slider-runnable-track {
+    height: 2px;
 }
 
 .time-slider {
