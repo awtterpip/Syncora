@@ -122,6 +122,15 @@ body {
     border-color: var(--gradient-end);
 }
 
+.config-slider::-webkit-slider-thumb {
+    background-color: var(--gradient-middle);
+    border-color: var(--gradient-end);
+}
+
+.config-slider::-webkit-slider-runnable-track {
+    background: var(--page-bg);
+}
+
 .config-slider::-moz-range-track {
     background-color: var(--page-bg)
 }
